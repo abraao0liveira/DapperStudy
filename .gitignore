@@ -1,0 +1,82 @@
+﻿## Build artifacts
+bin/
+obj/
+
+## Blazor WebAssembly build artifacts
+**/wwwroot/.clientlib/
+**/wwwroot/service-worker*.js
+**/wwwroot/manifest.json
+**/wwwroot/_framework/
+**/wwwroot/_content/
+*.blazor.config
+wwwroot/css/app.css
+wwwroot/js/app.js
+
+## Rider IDE
+.idea/
+*.sln.iml
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio Code
+.vscode/
+
+## NuGet packages e arquivos de cache
+*.nupkg
+packages/
+~/.nuget/packages/
+project.lock.json
+project.fragment.lock.json
+project.nuget.cache
+project.assets.json
+
+## Azure publish profiles
+PublishProfiles/
+
+## Logs
+*.log
+
+## Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+## Compiled binaries and executables
+*.dll
+*.exe
+*.app
+*.pdb
+*.cache
+
+## Java compiled files
+*.class
+*.jar
+*.war
+
+## Python bytecode (precautionary)
+*.py[cod]
+
+## Node (for SPA or front-end components)
+node_modules/
+dist/
+
+## Large media files (optional, adjust as needed)
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
