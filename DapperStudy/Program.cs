@@ -23,6 +23,11 @@ class Program
             //ExecuteReadProcedure(connection);
             //ExecuteScalar(connection);
             //ReadView(connection);
+            // OneToOne(connection);
+            // OneToMany(connection);
+            // QueryMultiple(connection);
+            //SelectIn(connection);
+            //Like(connection, "backend");
         }
     }
 
@@ -254,6 +259,95 @@ class Program
             {
                 Console.WriteLine($" - {item.Title}");
             }
+        }
+    }
+
+    static void QueryMultiple(SqlConnection connection)
+    {
+        var query = "select * from [category]; select * from [course]";
+
+        using (var multi = connection.QueryMultiple(query))
+        {
+            var categories = multi.Read<Category>();
+            var courses = multi.Read<Course>();
+
+            foreach (var category in categories)
+            {
+                Console.WriteLine($"{category.Id} - {category.Title}");
+            }
+
+            foreach (var course in courses)
+            {
+                Console.WriteLine($"{course.Id} - {course.Title}");
+            }
+        }
+    }
+
+    static void SelectIn(SqlConnection connection)
+    {
+        var query = "select * from [career] where [id] in (@Id)";
+        
+        var itens = connection.Query<Career>(query, new
+        {
+            Id = new[]
+            {
+                1,
+                2
+            }
+        });
+
+        foreach (var item in itens)
+        {
+            Console.WriteLine($"{item.Id} - {item.Title}");
+        }
+    }
+
+    static void Like(SqlConnection connection, string term)
+    {
+        var query = "select * from [career] where [title] like @exp";
+        
+        var itens = connection.Query<Course>(query, new
+        {
+            exp = $"%{term}%"
+        });
+
+        foreach (var item in itens)
+        {
+            Console.WriteLine($"{item.Id} - {item.Title}");
+        }
+    }
+    
+    static void Transaction(SqlConnection connection)
+    {
+        var category = new Category
+        {
+            Id = Guid.NewGuid(),
+            Title = "Amazon AWS",
+            Url = "https://aws.amazon.com",
+            Summary = "AWS Cloud",
+            Order = 8,
+            Description = "Categoria de cursos de aws",
+            Featured = true
+        };
+
+        const string sqlInsert = " insert into [category] " +
+                                 " values(@Id, @Title, @Url, @Summary, @Order, @Description, @Featured) ";
+        using (var transaction = connection.BeginTransaction()) //Tudo que for feito dentro, vai ser uma transacao
+        {
+            var rows = connection.Execute(sqlInsert, new
+            {
+                Id = category.Id,
+                Title = category.Title,
+                Url = category.Url,
+                Summary = category.Summary,
+                Order = category.Order,
+                Description = category.Description,
+                Featured = category.Featured
+            }, transaction);
+            
+            transaction.Commit(); //salva, so commita se usar o .Commit()
+            transaction.Rollback(); //desfaz as alteracoes
+            Console.WriteLine($"Inserted {rows} rows");
         }
     }
 }
